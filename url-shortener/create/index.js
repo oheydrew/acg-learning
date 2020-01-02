@@ -18,7 +18,7 @@ const htmlPage = (prefix, submittedUrl) => `
 
 const handler = (event, context, callback) => {
   const {
-    headers: { referrer },
+    headers: { Referer: referer },
     body
   } = event;
 
@@ -29,7 +29,7 @@ const handler = (event, context, callback) => {
 
   callback(null, {
     statusCode: 200,
-    body: htmlPage(referrer, submittedUrl),
+    body: htmlPage(referer || 'https://www.mysite.com', submittedUrl),
     headers: { 'Content-Type': 'text/html' }
   });
 };

@@ -16,12 +16,19 @@ functions:
       - http:
           path: /
           method: get
-
   create:
     handler: create/index.handler
     events:
       - http:
           path: /
           method: post
-
+  redirect:
+    handler: redirect/index.handler
+    events:
+      - http:
+          path: /{slug}
+          method: get
+    environment:
+      URL_INSTALL: http://install
+      USL_TEST: http://test
 
