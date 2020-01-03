@@ -6,7 +6,7 @@ const QueryString = require('querystring');
 
 AWS.config.setPromisesDependency(Promise);
 
-const TABLE_NAME = `${process.env.SLS_STAGE}-shortened-urls`;
+const TABLE_NAME = process.env.DDB_TABLE;
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
 const htmlPage = (link, submittedUrl) => `

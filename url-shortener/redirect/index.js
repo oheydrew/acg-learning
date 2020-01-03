@@ -2,17 +2,30 @@
 
 const AWS = require('aws-sdk');
 
-const TABLE_NAME = `${process.env.SLS_STAGE}-shortened-urls`;
+const TABLE_NAME = process.env.DDB_TABLE;
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
-const successMessage = item => ({
-  statusCode: 302,
-  body: item.long_url,
-  headers: {
-    Location: item.long_url,
-    'Content-Type': 'text/plain'
+const addHttpIfRequired = url => {
+  if (!url.includes('http://') || !url.includes('https://')) {
+    console.log(`adding http:// - http://${url}`);
+    return `http://${url}`;
   }
-});
+
+  return url;
+};
+
+const successMessage = item => {
+  const longHttpUrl = addHttpIfRequired(item.long_url);
+
+  return {
+    statusCode: 302,
+    body: longHttpUrl,
+    headers: {
+      Location: longHttpUrl,
+      'Content-Type': 'text/plain'
+    }
+  };
+};
 
 const failMessage = () => ({
   statusCode: 404,
